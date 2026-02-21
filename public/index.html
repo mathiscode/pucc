@@ -139,7 +139,7 @@ about</code></pre>
       <div class="card">
         <h2>Module Import (ESM)</h2>
         <p>When using ESM, no global instance is created automatically. You have full control:</p>
-        <pre><code>import { Pucc } from 'pucc';
+        <pre><code>import { Pucc } from '@mathiscode/pucc';
 
 // Option 1: Create a global instance (like IIFE build)
 const shell = new Pucc();
@@ -154,7 +154,7 @@ const shell = new Pucc({ enableGlobalRegistrations: false });
       <div class="card">
         <h2>Disabling Global Registrations</h2>
         <p>Limit commands to the terminal only (avoiding global namespace pollution):</p>
-        <pre><code>import { Pucc } from 'pucc';
+        <pre><code>import { Pucc } from '@mathiscode/pucc';
 
 const shell = new Pucc({ enableGlobalRegistrations: false });
 
@@ -168,7 +168,7 @@ shell.addCommand('mycommand', (args) => {
       <div class="card">
         <h2>Custom Command Prefix</h2>
         <p>Customize the command prefix (must be a valid JavaScript identifier):</p>
-        <pre><code>import { Pucc } from 'pucc';
+        <pre><code>import { Pucc } from '@mathiscode/pucc';
 
 const shell = new Pucc({ commandPrefix: 'cmd' });
 
