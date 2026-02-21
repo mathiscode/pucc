@@ -1,0 +1,64 @@
+{
+  "name": "@mathiscode/pucc",
+  "version": "1.0.0",
+  "license": "MIT",
+  "description": "Power User Console Component - A browser console command system library",
+  "author": {
+    "name": "Jay Mathis",
+    "email": "code@mathis.network",
+    "url": "https://github.com/mathiscode"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mathiscode/pucc.git"
+  },
+  "main": "dist/pucc.js",
+  "module": "dist/pucc.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "node config/build.js",
+    "build:dev": "node config/build.js --watch",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "eslint src --ext .ts",
+    "server": "node server.js",
+    "start": "node server.js",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": [
+    "devtools",
+    "console",
+    "commands",
+    "browser"
+  ],
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^25.3.0",
+    "@typescript-eslint/eslint-plugin": "^8.56.0",
+    "@typescript-eslint/parser": "^8.56.0",
+    "@xterm/addon-fit": "^0.11.0",
+    "@xterm/xterm": "^6.0.0",
+    "chalk": "^5.6.2",
+    "esbuild": "^0.27.3",
+    "esbuild-server": "^0.3.0",
+    "eslint": "^10.0.1",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.3.0",
+    "jiti": "^2.6.1",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.8.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.0"
+  },
+  "lint-staged": {
+    "*.{ts,js}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

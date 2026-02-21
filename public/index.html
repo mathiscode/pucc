@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pucc : Power User Console Component</title>
+  <link rel="stylesheet" href="demo.css">
+</head>
+<body>
+  <div class="container">
+    <div class="hero">
+      <h1>Pucc</h1>
+      <h2>Power User Console Component</h2>
+      <h3>Made with ❤️ by <a href="https://github.com/mathiscode">Jay Mathis</a></h3>
+      <div class="github-link">
+        <a href="https://github.com/mathiscode/pucc" target="_blank" rel="noopener noreferrer" class="github-button">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
+          <span>View on GitHub</span>
+        </a>
+      </div>
+      <p>A browser library that provides a console command system. Register custom commands and execute them via the browser console with a <code>$</code> (configurable) prefix or via the dropdown or embedded terminal Custom Element.</p>
+      <br />
+      <p>This can be very useful for web apps that need to provide a console for users to interact with the app, bypassing the UI for power users.</p>
+    </div>
+
+    <div class="terminal-container">
+      <h2>Dropdown Terminal <span class="badge">Alt+S</span></h2>
+      <p style="color: var(--text-muted); margin-bottom: 1rem;">
+        Press <kbd>Alt</kbd> + <kbd>S</kbd> (hotkey configurable) to open a dropdown terminal that slides down from the top of the page. Press <kbd>Escape</kbd> to close it.
+      </p>
+      <div id="dropdown-terminal">
+        <p style="color: var(--text-muted); margin: 0; text-align: center;">
+          The dropdown terminal will appear at the top of the page when you press <kbd>Alt</kbd> + <kbd>S</kbd>
+        </p>
+      </div>
+    </div>
+
+    <div class="terminal-container" style="margin-bottom: 3rem;">
+      <h2>Embedded Terminal <span class="badge">Live Demo</span></h2>
+      <p style="color: var(--text-muted); margin-bottom: 1rem;">A terminal embedded directly in the page. Try commands like <code>help</code> or <code>about</code>:</p>
+      <div id="embedded-terminal"></div>
+    </div>
+
+    <div class="content-grid">
+      <div class="card">
+        <h2>Installation</h2>
+        <p>Get started with Pucc in seconds. Choose your preferred package manager:</p>
+        <p><strong>Via pnpm/yarn/npm</strong></p>
+        <pre><code>pnpm add @mathiscode/pucc # or yarn add / npm install</code></pre>
+        <p><strong>Via Script Tag</strong></p>
+        <pre><code>&lt;script src="https://unpkg.com/@mathiscode/pucc/dist/pucc.js"&gt;&lt;/script&gt;</code></pre>
+      </div>
+
+      <div class="card">
+        <h2>Usage</h2>
+        <p>After including the library, commands are automatically available in the browser console:</p>
+        <pre><code>$help()        // Lists all available commands
+$about()       // Shows library information</code></pre>
+      </div>
+
+      <div class="card">
+        <h2>Adding Custom Commands</h2>
+        <p>Register a new command with ease:</p>
+        <pre><code>Pucc.addCommand('new', (args) => {
+  console.log('Creating:', args._[0]);
+  console.log('Arguments:', args);
+}, 'Create a new entity');</code></pre>
+        <p>Now you can use it in the console or dropdown terminal:</p>
+        <pre><code>$new('customer', 'name="John Smith"', 'balance=5400')
+new customer name="John Smith" balance=5400</code></pre>
+      </div>
+
+      <div class="card">
+        <h2>Terminal Types</h2>
+        <p><strong>Embedded Terminal</strong></p>
+        <p>Embedded terminals are always visible on the page. Use the <code>embedded</code> attribute:</p>
+        <pre><code>&lt;pucc-terminal embedded="true"&gt;&lt;/pucc-terminal&gt;</code></pre>
+        <p><strong>Dropdown Terminal</strong></p>
+        <p>Dropdown terminals slide down from the top when activated via hotkey (default: <kbd>Alt</kbd> + <kbd>S</kbd>). Press <kbd>Escape</kbd> to close.</p>
+        <pre><code>&lt;pucc-terminal&gt;&lt;/pucc-terminal&gt;</code></pre>
+      </div>
+
+      <div class="card">
+        <h2>Configuration</h2>
+        <p>Customize the terminal with attributes:</p>
+        <pre><code>&lt;pucc-terminal
+  embedded="true"
+  height="300px"
+  theme="dark"
+  prompt="# "
+  hotkey="alt+s"
+  pucc-options='{"enableGlobalRegistrations": false}'&gt;
+&lt;/pucc-terminal&gt;</code></pre>
+        <p><strong>Attributes:</strong></p>
+        <ul style="color: var(--text-muted); margin: 0.5rem 0; padding-left: 1.5rem;">
+          <li><code>embedded</code> - Set to "true" for embedded mode</li>
+          <li><code>height</code> - Terminal height (e.g., "300px", "50vh")</li>
+          <li><code>theme</code> - Color theme ("dark" or "light")</li>
+          <li><code>prompt</code> - Custom prompt text (default: "$ ")</li>
+          <li><code>hotkey</code> - Keyboard shortcut for dropdown (e.g., "alt+s")</li>
+          <li><code>pucc-options</code> - JSON string with Pucc constructor options (see "Passing Pucc Options to Terminal" card)</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Command Execution</h2>
+        <p><strong>Browser Console</strong></p>
+        <p>In the browser console, use the <code>$</code> prefix and call it as a function:</p>
+        <pre><code>$help()
+$about()</code></pre>
+        <p><strong>Terminal Component</strong></p>
+        <p>In embedded or dropdown terminals, type commands directly without the prefix:</p>
+        <pre><code>help
+about</code></pre>
+      </div>
+
+      <div class="card">
+        <h2>Command Arguments</h2>
+        <p>The command parser supports flexible argument formats:</p>
+        <p><strong>Positional arguments:</strong></p>
+        <pre><code>$new customer
+// args = { _: ['customer'] }</code></pre>
+        <p><strong>Key-value pairs:</strong></p>
+        <pre><code>$new name="John Smith" balance=5400
+// args = { name: "John Smith", balance: 5400 }</code></pre>
+        <p><strong>Mixed (positional + key-value):</strong></p>
+        <pre><code>$new customer name="John Smith" balance=5400
+// args = { _: ['customer'], name: "John Smith", balance: 5400 }</code></pre>
+        <p><strong>Type conversion:</strong></p>
+        <ul style="color: var(--text-muted); margin: 0.5rem 0; padding-left: 1.5rem;">
+          <li>Numbers: <code>balance=5400</code> → <code>5400</code> (number)</li>
+          <li>Booleans: <code>active=true</code> → <code>true</code> (boolean)</li>
+          <li>Strings: <code>name="John"</code> → <code>"John"</code> (string)</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Module Import (ESM)</h2>
+        <p>When using ESM, no global instance is created automatically. You have full control:</p>
+        <pre><code>import { Pucc } from 'pucc';
+
+// Option 1: Create a global instance (like IIFE build)
+const shell = new Pucc();
+shell.initialize();
+// Now commands are available: $help(), $about()
+
+// Option 2: Create a terminal-only instance
+const shell = new Pucc({ enableGlobalRegistrations: false });
+// Commands only available in terminal elements, not globally</code></pre>
+      </div>
+
+      <div class="card">
+        <h2>Disabling Global Registrations</h2>
+        <p>Limit commands to the terminal only (avoiding global namespace pollution):</p>
+        <pre><code>import { Pucc } from 'pucc';
+
+const shell = new Pucc({ enableGlobalRegistrations: false });
+
+// Commands will only be available through the terminal
+// They will NOT be accessible via window.$commandName
+shell.addCommand('mycommand', (args) => {
+  console.log('This command is only available in the terminal');
+}, 'A terminal-only command');</code></pre>
+      </div>
+
+      <div class="card">
+        <h2>Custom Command Prefix</h2>
+        <p>Customize the command prefix (must be a valid JavaScript identifier):</p>
+        <pre><code>import { Pucc } from 'pucc';
+
+const shell = new Pucc({ commandPrefix: 'cmd' });
+
+// Now commands can be called with the custom prefix
+// cmdhelp() or cmdabout() in the console
+// Or without prefix: help() or about()
+
+shell.addCommand('greet', (args) => {
+  console.log(`Hello, ${args._[0] || 'World'}!`);
+}, 'Greet someone');
+
+// Can be called as: cmdgreet('Alice') or greet('Alice')</code></pre>
+        <p><strong>Valid prefixes:</strong> <code>$</code>, <code>_</code>, <code>cmd</code>, <code>myPrefix</code>, <code>prefix123</code>, <code>_prefix</code></p>
+        <p style="color: var(--text-muted); font-size: 0.9em; margin-top: 0.5rem;">The prefix must be a valid JavaScript identifier (starts with a letter, underscore, or dollar sign; can only contain letters, digits, underscores, and dollar signs).</p>
+      </div>
+
+      <div class="card">
+        <h2>Passing Pucc Options to Terminal</h2>
+        <p>Configure Pucc options when using the <code>pucc-terminal</code> custom element:</p>
+        <p><strong>Via attribute (simple options):</strong></p>
+        <pre><code>&lt;pucc-terminal 
+  embedded="true"
+  pucc-options='{"enableGlobalRegistrations": false, "commandPrefix": "_"}'&gt;
+&lt;/pucc-terminal&gt;</code></pre>
+        <p><strong>Via property (full functionality):</strong></p>
+        <pre><code>const terminal = document.querySelector('pucc-terminal');
+
+terminal.puccOptions = {
+  enableGlobalRegistrations: false,
+  commandPrefix: 'cmd',
+  customHelpHandler: (args, shell) => {
+    console.log('Custom help!');
+  },
+  initialCommands: [
+    {
+      name: 'greet',
+      description: 'Greet someone',
+      handler: (args) => {
+        console.log(`Hello, ${args._[0] || 'World'}!`);
+      }
+    }
+  ]
+};</code></pre>
+        <p style="color: var(--text-muted); font-size: 0.9em; margin-top: 0.5rem;"><strong>Note:</strong> The <code>pucc-options</code> attribute only supports JSON-serializable options. For options that include functions, use the <code>puccOptions</code> property instead.</p>
+      </div>
+
+      <div class="card">
+        <h2>About the Author</h2>
+        <p>Pucc is created and maintained by <strong><a href="https://jaymath.is">Jay Mathis</a></strong>, a developer passionate about building useful tools for the web.</p>
+        <p><strong>Connect & Explore:</strong></p>
+        <ul style="color: var(--text-muted); margin: 0.5rem 0; padding-left: 1.5rem;">
+          <li><a href="https://github.com/mathiscode" target="_blank" rel="noopener noreferrer">GitHub Profile</a> - Check out other projects and contributions</li>
+          <li><a href="https://github.com/mathiscode/pucc" target="_blank" rel="noopener noreferrer">Pucc Repository</a> - Star, fork, or contribute to this project</li>
+          <li><a href="https://jaymath.is" target="_blank" rel="noopener noreferrer">Website</a> - Learn more about Jay and his work</li>
+        </ul>
+        <p style="color: var(--text-muted); font-size: 0.9em; margin-top: 0.5rem;">Found Pucc useful? Consider giving it <a href="https://github.com/mathiscode/pucc/stargazers" target="_blank" rel="noopener noreferrer">a star on GitHub</a>! ⭐</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="pucc.js"></script>
+
+  <script>
+    function createTerminals() {
+      const embeddedContainer = document.getElementById('embedded-terminal');
+      const dropdownContainer = document.getElementById('dropdown-terminal');
+      
+      if (embeddedContainer) {
+        const embeddedTerminal = document.createElement('pucc-terminal');
+        embeddedTerminal.setAttribute('embedded', 'true');
+        embeddedTerminal.setAttribute('height', '250px');
+        embeddedTerminal.setAttribute('theme', 'dark');
+        embeddedTerminal.setAttribute('prompt', '# ');
+        embeddedContainer.appendChild(embeddedTerminal);
+      }
+      
+      if (dropdownContainer) {
+        const dropdownTerminal = document.createElement('pucc-terminal');
+        dropdownTerminal.setAttribute('height', '400px');
+        dropdownTerminal.setAttribute('theme', 'dark');
+        dropdownTerminal.setAttribute('prompt', '# ');
+        dropdownContainer.appendChild(dropdownTerminal);
+      }
+    }
+
+    if (customElements.get('pucc-terminal')) {
+      createTerminals();
+    } else {
+      customElements.whenDefined('pucc-terminal').then(() => {
+        createTerminals();
+      });
+    }
+  </script>
+  
+  <script>
+    let lastModified = 0;
+    setInterval(async () => {
+      try {
+        const response = await fetch('pucc.js?t=' + Date.now(), { method: 'HEAD' });
+        const modified = response.headers.get('last-modified');
+        if (modified) {
+          const modifiedTime = new Date(modified).getTime();
+          if (lastModified > 0 && modifiedTime > lastModified) {
+            window.location.reload();
+          }
+          lastModified = modifiedTime;
+        }
+      } catch (e) {
+        // Ignore errors
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
