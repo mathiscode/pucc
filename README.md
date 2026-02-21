@@ -1,5 +1,10 @@
 # Pucc
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-22272e&labelColor=0d1117&color=4caf50)](https://mathiscode.github.io/pucc/)
+
+[![npm](https://img.shields.io/npm/v/@mathiscode/pucc)](https://www.npmjs.com/package/@mathiscode/pucc)
+[![GitHub](https://img.shields.io/github/stars/mathiscode/pucc)](https://github.com/mathiscode/pucc)
+
 Power User Console Component - A browser library that provides a console command system. 
 
 Register custom commands and execute them via the browser console with a `$` prefix or via the dropdown or embedded terminal Custom Element.
