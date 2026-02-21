@@ -99,13 +99,30 @@ export class ShellTerminal extends HTMLElement {
         this.updatePrompt()
         break
       case 'initial-content':
-        this.initialContent = newValue || null
+        this.initialContent = newValue ? this.decodeEscapeSequences(newValue) : null
         break
       case 'pucc-options':
         this.parsePuccOptions(newValue)
         this.initializeShell()
         break
     }
+  }
+
+  private decodeEscapeSequences(str: string): string {
+    return str.replace(/\\([nrtbfv\\'"])/g, (match, escape) => {
+      switch (escape) {
+        case 'n': return '\n'
+        case 'r': return '\r'
+        case 't': return '\t'
+        case 'b': return '\b'
+        case 'f': return '\f'
+        case 'v': return '\v'
+        case '\\': return '\\'
+        case "'": return "'"
+        case '"': return '"'
+        default: return match
+      }
+    })
   }
 
   private getThemeColors() {
@@ -256,7 +273,7 @@ export class ShellTerminal extends HTMLElement {
 
     const initialContentAttr = this.getAttribute('initial-content')
     if (initialContentAttr !== null) {
-      this.initialContent = initialContentAttr
+      this.initialContent = this.decodeEscapeSequences(initialContentAttr)
     }
 
     const theme = this.getThemeFromCSS()

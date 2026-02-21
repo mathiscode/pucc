@@ -1,5 +1,7 @@
 # Pucc
 
+## Power User Console Component
+
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-rebeccapurple)](https://mathiscode.github.io/pucc/)
 
 [![npm](https://img.shields.io/npm/v/@mathiscode/pucc)](https://www.npmjs.com/package/@mathiscode/pucc)
@@ -10,9 +12,9 @@
 [![Sponsors](https://img.shields.io/github/sponsors/mathiscode?color=red&logo=github&label=💖%20sponsors)](https://github.com/sponsors/mathiscode)
 [![Contributors](https://img.shields.io/github/contributors/mathiscode/pucc?color=yellow&logo=github&label=👥%20contributors)](https://github.com/mathiscode/pucc/graphs/contributors)
 
-Power User Console Component - A browser library that provides a console command system.
+A browser library that provides a console command system.
 
-Register custom commands and execute them via the browser console with a `$` prefix or via the dropdown or embedded terminal Custom Element.
+Register custom commands and execute them via the browser console (DevTools) with a `$` prefix or via the dropdown or embedded terminal Custom Element ([Web Component](https://developer.mozilla.org/en-US/docs/Web/API/Web_components)).
 
 This can be very useful for web apps that need to provide a console for users to interact with the app, bypassing the UI for power users.
 
