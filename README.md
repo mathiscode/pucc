@@ -385,4 +385,13 @@ pucc/
 
 ## License
 
-MIT
+[MIT](LICENSE)
+
+## About the Author
+
+Pucc is created and maintained by [Jay Mathis](https://github.com/mathiscode), a developer passionate about building useful tools for the web.
+
+Connect and explore:
+
+- [GitHub Profile](https://github.com/mathiscode) - Check out my other projects and contributions
+- [Website](https://jaymath.is) - Learn more about me and my work
