@@ -1,6 +1,6 @@
 {
   "name": "@mathiscode/pucc",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "MIT",
   "description": "Power User Console Component - A browser console command system library",
   "author": {
