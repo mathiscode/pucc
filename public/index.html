@@ -91,6 +91,7 @@ new customer name="John Smith" balance=5400</code></pre>
   theme="dark"
   prompt="# "
   hotkey="alt+s"
+  initial-content="Welcome to my terminal!"
   pucc-options='{"enableGlobalRegistrations": false}'&gt;
 &lt;/pucc-terminal&gt;</code></pre>
         <p><strong>Attributes:</strong></p>
@@ -100,6 +101,7 @@ new customer name="John Smith" balance=5400</code></pre>
           <li><code>theme</code> - Color theme ("dark" or "light")</li>
           <li><code>prompt</code> - Custom prompt text (default: "$ ")</li>
           <li><code>hotkey</code> - Keyboard shortcut for dropdown (e.g., "alt+s")</li>
+          <li><code>initial-content</code> - Custom initial content to display instead of the default welcome message (supports newlines)</li>
           <li><code>pucc-options</code> - JSON string with Pucc constructor options (see "Passing Pucc Options to Terminal" card)</li>
         </ul>
       </div>
@@ -183,6 +185,38 @@ shell.addCommand('greet', (args) => {
 // Can be called as: cmdgreet('Alice') or greet('Alice')</code></pre>
         <p><strong>Valid prefixes:</strong> <code>$</code>, <code>_</code>, <code>cmd</code>, <code>myPrefix</code>, <code>prefix123</code>, <code>_prefix</code></p>
         <p style="color: var(--text-muted); font-size: 0.9em; margin-top: 0.5rem;">The prefix must be a valid JavaScript identifier (starts with a letter, underscore, or dollar sign; can only contain letters, digits, underscores, and dollar signs).</p>
+      </div>
+
+      <div class="card">
+        <h2>Customizing Terminal Appearance with CSS</h2>
+        <p>The terminal component supports CSS custom properties for advanced styling:</p>
+        <pre><code>pucc-terminal {
+  --shell-bg: #1a1a1a;
+  --shell-fg: #e0e0e0;
+  --shell-accent: #00aaff;
+  --shell-border: rgba(255, 255, 255, 0.1);
+  --shell-font-family: 'Courier New', monospace;
+  --shell-font-size: 16px;
+  --shell-padding: 20px;
+  --shell-animation-duration: 0.3s;
+  --shell-border-radius: 12px;
+  --shell-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
+  --shell-backdrop-blur: 15px;
+}</code></pre>
+        <p><strong>Available CSS Variables:</strong></p>
+        <ul style="color: var(--text-muted); margin: 0.5rem 0; padding-left: 1.5rem;">
+          <li><code>--shell-bg</code> - Background color</li>
+          <li><code>--shell-fg</code> - Foreground/text color</li>
+          <li><code>--shell-accent</code> - Accent color (cursor, selection)</li>
+          <li><code>--shell-border</code> - Border color</li>
+          <li><code>--shell-font-family</code> - Font family</li>
+          <li><code>--shell-font-size</code> - Font size</li>
+          <li><code>--shell-padding</code> - Padding</li>
+          <li><code>--shell-animation-duration</code> - Animation duration</li>
+          <li><code>--shell-border-radius</code> - Border radius</li>
+          <li><code>--shell-shadow</code> - Box shadow</li>
+          <li><code>--shell-backdrop-blur</code> - Backdrop blur amount (dropdown terminals only)</li>
+        </ul>
       </div>
 
       <div class="card">

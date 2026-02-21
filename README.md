@@ -199,9 +199,24 @@ The `<pucc-terminal>` custom element can use either:
 ```html
 <pucc-terminal 
   embedded="true"
+  height="300px"
+  theme="dark"
+  prompt="# "
+  hotkey="alt+s"
+  initial-content="Welcome to my terminal!"
   pucc-options='{"enableGlobalRegistrations": false, "commandPrefix": "_"}'>
 </pucc-terminal>
 ```
+
+**Terminal Attributes:**
+
+- `embedded` - Set to `"true"` for embedded mode (always visible)
+- `height` - Terminal height (e.g., `"300px"`, `"50vh"`)
+- `theme` - Color theme (`"dark"` or `"light"`)
+- `prompt` - Custom prompt text (default: `"$ "`)
+- `hotkey` - Keyboard shortcut for dropdown terminals (e.g., `"alt+s"`, `"ctrl+shift+t"`)
+- `initial-content` - Custom initial content to display instead of the default welcome message (supports newlines with `\n`)
+- `pucc-options` - JSON string with Pucc constructor options (see below)
 
 **Via property (for full functionality, including functions):**
 
@@ -260,6 +275,40 @@ shell.addCommand('shared', () => console.log('Shared command'), 'Shared command'
 ```
 
 **Note:** The `pucc-options` attribute only supports JSON-serializable options (`enableGlobalRegistrations`, `commandPrefix`). For options that include functions (`customHelpHandler`, `initialCommands`), use the `puccOptions` property instead.
+
+### Customizing Terminal Appearance with CSS
+
+The terminal component supports CSS custom properties for advanced styling:
+
+```css
+pucc-terminal {
+  --shell-bg: #1a1a1a;
+  --shell-fg: #e0e0e0;
+  --shell-accent: #00aaff;
+  --shell-border: rgba(255, 255, 255, 0.1);
+  --shell-font-family: 'Courier New', monospace;
+  --shell-font-size: 16px;
+  --shell-padding: 20px;
+  --shell-animation-duration: 0.3s;
+  --shell-border-radius: 12px;
+  --shell-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
+  --shell-backdrop-blur: 15px;
+}
+```
+
+**Available CSS Variables:**
+
+- `--shell-bg` - Background color
+- `--shell-fg` - Foreground/text color
+- `--shell-accent` - Accent color (cursor, selection)
+- `--shell-border` - Border color
+- `--shell-font-family` - Font family
+- `--shell-font-size` - Font size
+- `--shell-padding` - Padding
+- `--shell-animation-duration` - Animation duration
+- `--shell-border-radius` - Border radius
+- `--shell-shadow` - Box shadow
+- `--shell-backdrop-blur` - Backdrop blur amount (dropdown terminals only)
 
 ## API Reference
 
