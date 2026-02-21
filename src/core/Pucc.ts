@@ -67,6 +67,25 @@ export class Pucc {
   }
 
   /**
+   * Remove a command by name
+   */
+  removeCommand(name: string): boolean {
+    if (!name || typeof name !== 'string') throw new Error('Command name must be a non-empty string');
+    if (name.startsWith(this.commandPrefix)) throw new Error(`Command name should not include the ${this.commandPrefix} prefix`);
+
+    if (!this.commands.has(name)) {
+      return false;
+    }
+
+    this.commands.delete(name);
+
+    // Remove from window for console access (if global registrations are enabled)
+    if (this.enableGlobalRegistrations) this.detachCommandFromWindow(name);
+
+    return true;
+  }
+
+  /**
    * Execute a command by name with arguments
    */
   execute(commandName: string, input: string = '', logger?: TerminalLogger | null): void {
@@ -220,6 +239,23 @@ export class Pucc {
         const input = args.length > 0 ? args.join(' ') : '';
         this.execute(name, input);
       };
+    }
+  }
+
+  /**
+   * Detach a command from window (both prefix+commandName and commandName)
+   */
+  private detachCommandFromWindow(name: string): void {
+    const prefixedName = `${this.commandPrefix}${name}`;
+    
+    // Always delete the prefixed version
+    delete (window as Window & Record<string, unknown>)[prefixedName];
+
+    // Delete non-prefixed version only if it exists and is a function
+    // (to avoid deleting native window properties)
+    const nonPrefixed = (window as Window & Record<string, unknown>)[name];
+    if (typeof nonPrefixed === 'function') {
+      delete (window as Window & Record<string, unknown>)[name];
     }
   }
 }

@@ -367,6 +367,41 @@ shell.addCommand('greet', (args) => {
 
 **Note:** In IIFE builds, you can also use `Pucc.addCommand()` which adds to the global instance automatically created.
 
+### `shell.removeCommand(name)`
+
+Remove a command from a Pucc instance. The command is immediately removed from terminals and (if `enableGlobalRegistrations` is true) from the console.
+
+**Parameters:**
+
+- `name` (string): Command name (without prefix)
+
+**Returns:**
+
+- `boolean`: `true` if the command was successfully removed, `false` if the command was not found
+
+**Example:**
+
+```javascript
+const shell = new Pucc();
+
+// Add a command
+shell.addCommand('greet', (args) => {
+  console.log(`Hello, ${args._[0] || 'World'}!`);
+}, 'Greet someone');
+
+// Remove the command
+const removed = shell.removeCommand('greet');
+if (removed) {
+  console.log('Command removed successfully');
+} else {
+  console.log('Command not found');
+}
+
+// The command is no longer available in console or terminals
+```
+
+**Note:** In IIFE builds, you can also use `Pucc.removeCommand()` which removes from the global instance automatically created.
+
 ### `ParsedArgs`
 
 The argument object passed to command handlers:
