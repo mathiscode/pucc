@@ -43,3 +43,7 @@ coverage/
 # Playwright
 test-results/
 playwright-report/
+
+# Generated demo assets
+public/pucc.*
+public/demo.css*

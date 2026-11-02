@@ -466,7 +466,7 @@ pucc/
 ├── dist/                     # Build output
 ├── eslint.config.mts         # ESLint configuration
 ├── tsconfig.json             # TypeScript configuration
-└── server.js                 # Development server
+└── (dev server: config/dev.mjs)
 ```
 
 ## License
