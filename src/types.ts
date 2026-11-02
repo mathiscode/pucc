@@ -17,7 +17,10 @@ export interface ParsedArgs {
  * @param args - Parsed command arguments
  * @param shell - The Pucc instance (for accessing shell methods)
  */
-export type CommandHandler = (args: ParsedArgs, shell?: import('./core/Pucc').Pucc) => void | Promise<void>;
+export type CommandHandler = (
+  args: ParsedArgs,
+  shell?: import('./core/Pucc').Pucc
+) => void | Promise<void>;
 
 /**
  * Command definition

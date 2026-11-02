@@ -34,11 +34,11 @@ export class CommandParser {
 
       // Check if this looks like a key=value pair (starts with identifier followed by =)
       const keyMatch = trimmed.slice(i).match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*=/);
-      
+
       if (keyMatch) {
         const key = keyMatch[1];
         i += keyMatch[0].length; // Move past "key="
-        
+
         // Skip whitespace after =
         while (i < length && /\s/.test(trimmed[i])) {
           i++;
@@ -48,7 +48,7 @@ export class CommandParser {
         let value = '';
         let inQuotes = false;
         let quoteChar = '';
-        
+
         if (i < length && (trimmed[i] === '"' || trimmed[i] === "'")) {
           inQuotes = true;
           quoteChar = trimmed[i];
@@ -57,7 +57,7 @@ export class CommandParser {
 
         while (i < length) {
           const char = trimmed[i];
-          
+
           if (inQuotes) {
             if (char === quoteChar) {
               i++; // Skip closing quote
@@ -91,30 +91,30 @@ export class CommandParser {
         let arg = '';
         let inQuotes = false;
         let quoteChar = '';
-        
+
         while (i < length) {
           const char = trimmed[i];
-          
+
           if (!inQuotes && (char === '"' || char === "'")) {
             inQuotes = true;
             quoteChar = char;
             i++;
             continue;
           }
-          
+
           if (inQuotes && char === quoteChar) {
             i++;
             break;
           }
-          
+
           if (!inQuotes && /\s/.test(char)) {
             break;
           }
-          
+
           arg += char;
           i++;
         }
-        
+
         if (arg) {
           args._.push(arg);
         }

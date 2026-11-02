@@ -6,9 +6,7 @@ const { execSync } = require('child_process');
 const isWatch = process.argv.includes('--watch');
 const isProduction = process.env.NODE_ENV === 'production';
 
-const packageJson = JSON.parse(
-  readFileSync(join(__dirname, '..', 'package.json'), 'utf-8')
-);
+const packageJson = JSON.parse(readFileSync(join(__dirname, '..', 'package.json'), 'utf-8'));
 
 // Ensure dist and public directories exist
 const distDir = join(__dirname, '..', 'dist');
@@ -39,7 +37,7 @@ const iifeBuild = {
   format: 'iife',
   outfile: 'dist/pucc.js',
   define: {
-    '__PUCC_AUTO_INIT__': JSON.stringify('true'),
+    __PUCC_AUTO_INIT__: JSON.stringify('true'),
   },
   banner: {
     js: `/*! ${packageJson.name} v${packageJson.version} */`,
@@ -52,7 +50,7 @@ const esmBuild = {
   format: 'esm',
   outfile: 'dist/pucc.esm.js',
   define: {
-    '__PUCC_AUTO_INIT__': JSON.stringify('false'),
+    __PUCC_AUTO_INIT__: JSON.stringify('false'),
   },
   banner: {
     js: `/*! ${packageJson.name} v${packageJson.version} */`,
@@ -110,20 +108,14 @@ async function build() {
         copyIndexHTML();
       });
 
-      await Promise.all([
-        iifeContext.watch(),
-        esmContext.watch(),
-      ]);
+      await Promise.all([iifeContext.watch(), esmContext.watch()]);
 
       // Generate types once, then watch for changes
       generateTypes();
       console.log('Watching for changes...');
     } else {
       // Production build
-      await Promise.all([
-        esbuild.build(iifeBuild),
-        esbuild.build(esmBuild),
-      ]);
+      await Promise.all([esbuild.build(iifeBuild), esbuild.build(esmBuild)]);
 
       // Generate TypeScript declaration files
       generateTypes();

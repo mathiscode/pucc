@@ -10,7 +10,7 @@ describe('Pucc', () => {
 
   describe('constructor', () => {
     it('registers the built-in commands', () => {
-      const names = new Pucc().getCommands().map((c) => c.name);
+      const names = new Pucc().getCommands().map(c => c.name);
       expect(names).toEqual(expect.arrayContaining(['help', 'about', 'echo']));
     });
 
@@ -113,16 +113,22 @@ describe('Pucc', () => {
       vi.spyOn(console, 'error').mockImplementation(noop);
       const logger = { error: vi.fn() };
       new Pucc().execute('nope', '', logger as never);
-      expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('Command "nope" not found'));
+      expect(logger.error).toHaveBeenCalledWith(
+        expect.stringContaining('Command "nope" not found')
+      );
     });
 
     it('reports handler errors to the logger', () => {
       vi.spyOn(console, 'error').mockImplementation(noop);
       const logger = { error: vi.fn() };
       const pucc = new Pucc();
-      pucc.addCommand('boom', () => {
-        throw new Error('bad');
-      }, '');
+      pucc.addCommand(
+        'boom',
+        () => {
+          throw new Error('bad');
+        },
+        ''
+      );
       pucc.execute('boom', '', logger as never);
       expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('bad'));
     });
@@ -130,11 +136,15 @@ describe('Pucc', () => {
     it('reports async handler rejections to the console', async () => {
       const error = vi.spyOn(console, 'error').mockImplementation(noop);
       const pucc = new Pucc();
-      pucc.addCommand('aboom', async () => {
-        throw new Error('async bad');
-      }, '');
+      pucc.addCommand(
+        'aboom',
+        async () => {
+          throw new Error('async bad');
+        },
+        ''
+      );
       pucc.execute('aboom', '');
-      await new Promise((r) => setTimeout(r, 0));
+      await new Promise(r => setTimeout(r, 0));
       expect(error).toHaveBeenCalledWith(expect.stringContaining('async bad'));
     });
 
@@ -144,11 +154,15 @@ describe('Pucc', () => {
       vi.spyOn(console, 'error').mockImplementation(noop);
       const logger = { error: vi.fn() };
       const pucc = new Pucc();
-      pucc.addCommand('aboom', async () => {
-        throw new Error('async bad');
-      }, '');
+      pucc.addCommand(
+        'aboom',
+        async () => {
+          throw new Error('async bad');
+        },
+        ''
+      );
       pucc.execute('aboom', '', logger as never);
-      await new Promise((r) => setTimeout(r, 0));
+      await new Promise(r => setTimeout(r, 0));
       expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('async bad'));
     });
 

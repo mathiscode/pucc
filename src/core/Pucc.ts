@@ -1,10 +1,10 @@
-import type { Command, CommandHandler } from '../types';
-import { CommandParser } from './CommandParser';
-import { helpCommand } from '../commands/help';
+import chalk from 'chalk';
 import { aboutCommand } from '../commands/about';
 import { echoCommand } from '../commands/echo';
+import { helpCommand } from '../commands/help';
 import type { TerminalLogger } from '../components/TerminalLogger';
-import chalk from 'chalk';
+import type { Command, CommandHandler } from '../types';
+import { CommandParser } from './CommandParser';
 
 /**
  * Core Pucc class managing command registry and execution
@@ -17,7 +17,12 @@ export class Pucc {
   private enableGlobalRegistrations: boolean;
   private commandPrefix: string;
 
-  constructor(options?: { customHelpHandler?: CommandHandler; initialCommands?: Command[]; enableGlobalRegistrations?: boolean; commandPrefix?: string }) {
+  constructor(options?: {
+    customHelpHandler?: CommandHandler;
+    initialCommands?: Command[];
+    enableGlobalRegistrations?: boolean;
+    commandPrefix?: string;
+  }) {
     this.enableGlobalRegistrations = options?.enableGlobalRegistrations !== false;
     const prefix = options?.commandPrefix ?? '$';
     this.validateCommandPrefix(prefix);
@@ -41,8 +46,8 @@ export class Pucc {
     if (!validIdentifierPattern.test(prefix)) {
       throw new Error(
         `Invalid command prefix "${prefix}". Prefix must be a valid JavaScript identifier ` +
-        `(must start with a letter, underscore, or dollar sign, and can only contain ` +
-        `letters, digits, underscores, and dollar signs)`
+          `(must start with a letter, underscore, or dollar sign, and can only contain ` +
+          `letters, digits, underscores, and dollar signs)`
       );
     }
   }
@@ -51,8 +56,10 @@ export class Pucc {
    * Register a custom command
    */
   addCommand(name: string, handler: CommandHandler, description: string): void {
-    if (!name || typeof name !== 'string') throw new Error('Command name must be a non-empty string');
-    if (name.startsWith(this.commandPrefix)) throw new Error(`Command name should not include the ${this.commandPrefix} prefix`);
+    if (!name || typeof name !== 'string')
+      throw new Error('Command name must be a non-empty string');
+    if (name.startsWith(this.commandPrefix))
+      throw new Error(`Command name should not include the ${this.commandPrefix} prefix`);
     if (typeof handler !== 'function') throw new Error('Command handler must be a function');
     if (this.commands.has(name)) console.warn(`Command "${name}" already exists. Overwriting...`);
 
@@ -70,8 +77,10 @@ export class Pucc {
    * Remove a command by name
    */
   removeCommand(name: string): boolean {
-    if (!name || typeof name !== 'string') throw new Error('Command name must be a non-empty string');
-    if (name.startsWith(this.commandPrefix)) throw new Error(`Command name should not include the ${this.commandPrefix} prefix`);
+    if (!name || typeof name !== 'string')
+      throw new Error('Command name must be a non-empty string');
+    if (name.startsWith(this.commandPrefix))
+      throw new Error(`Command name should not include the ${this.commandPrefix} prefix`);
 
     if (!this.commands.has(name)) {
       return false;
@@ -89,14 +98,14 @@ export class Pucc {
    * Execute a command by name with arguments
    */
   execute(commandName: string, input: string = '', logger?: TerminalLogger | null): void {
-    const previousLogger = this.logger
+    const previousLogger = this.logger;
     if (logger !== undefined) {
-      this.logger = logger
+      this.logger = logger;
     }
 
     try {
       const command = this.commands.get(commandName);
-      
+
       if (!command) {
         const errorMsg = `Command "${commandName}" not found. Use help or ${this.commandPrefix}help to see available commands.`;
         console.error(errorMsg);
@@ -108,10 +117,10 @@ export class Pucc {
         const args = CommandParser.parse(input);
         // Pass the shell instance to the handler so it can access shell methods
         const result = command.handler(args, this);
-        
+
         // Handle async handlers
         if (result instanceof Promise) {
-          result.catch((error) => {
+          result.catch(error => {
             const errorMsg = `Error executing command "${commandName}": ${error}`;
             console.error(errorMsg);
             this.logger?.error('\r\n' + chalk.red(errorMsg));
@@ -124,7 +133,7 @@ export class Pucc {
       }
     } finally {
       if (logger !== undefined) {
-        this.logger = previousLogger
+        this.logger = previousLogger;
       }
     }
   }
@@ -146,7 +155,8 @@ export class Pucc {
     }
 
     // Strip command prefix if present
-    if (commandName.startsWith(this.commandPrefix)) commandName = commandName.slice(this.commandPrefix.length);
+    if (commandName.startsWith(this.commandPrefix))
+      commandName = commandName.slice(this.commandPrefix.length);
     this.execute(commandName, args, logger);
   }
 
@@ -194,7 +204,7 @@ export class Pucc {
    * Register initial commands provided in constructor
    */
   private registerInitialCommands(commands: Command[]): void {
-    commands.forEach((cmd) => {
+    commands.forEach(cmd => {
       this.addCommand(cmd.name, cmd.handler, cmd.description);
     });
   }
@@ -226,7 +236,7 @@ export class Pucc {
   private attachCommandToWindow(name: string): void {
     const prefixedName = `${this.commandPrefix}${name}`;
     type CommandFunction = (...args: string[]) => void;
-    
+
     // Create prefixed version (prefix+commandName) for backward compatibility
     (window as Window & Record<string, CommandFunction>)[prefixedName] = (...args: string[]) => {
       const input = args.length > 0 ? args.join(' ') : '';
@@ -247,7 +257,7 @@ export class Pucc {
    */
   private detachCommandFromWindow(name: string): void {
     const prefixedName = `${this.commandPrefix}${name}`;
-    
+
     // Always delete the prefixed version
     delete (window as Window & Record<string, unknown>)[prefixedName];
 

@@ -6,7 +6,8 @@ test.describe('pucc-terminal', () => {
     await expect(page.locator('#embedded-terminal pucc-terminal .xterm')).toBeVisible();
   });
 
-  const terminal = (page: import('@playwright/test').Page) => page.locator('#embedded-terminal pucc-terminal');
+  const terminal = (page: import('@playwright/test').Page) =>
+    page.locator('#embedded-terminal pucc-terminal');
   const rows = (page: import('@playwright/test').Page) => terminal(page).locator('.xterm-rows');
 
   async function run(page: import('@playwright/test').Page, line: string) {

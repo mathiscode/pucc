@@ -1,5 +1,5 @@
-import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
+import { createServer } from 'node:http';
 import { extname, join, normalize } from 'node:path';
 
 const root = join(process.cwd(), process.argv[2] ?? 'dist');
@@ -20,7 +20,9 @@ createServer(async (req, res) => {
   }
   try {
     const body = await readFile(file);
-    res.writeHead(200, { 'content-type': types[extname(file)] ?? 'application/octet-stream' }).end(body);
+    res
+      .writeHead(200, { 'content-type': types[extname(file)] ?? 'application/octet-stream' })
+      .end(body);
   } catch {
     res.writeHead(404).end('Not found');
   }
