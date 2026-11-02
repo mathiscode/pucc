@@ -39,3 +39,7 @@ coverage/
 
 # Husky
 .husky/_
+
+# Playwright
+test-results/
+playwright-report/
