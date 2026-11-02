@@ -4,7 +4,7 @@ import { echoCommand } from '../commands/echo';
 import { helpCommand } from '../commands/help';
 import type { TerminalLogger } from '../components/TerminalLogger';
 import type { Command, CommandHandler } from '../types';
-import { CommandParser } from './CommandParser';
+import * as CommandParser from './CommandParser';
 
 /**
  * Core Pucc class managing command registry and execution
@@ -111,7 +111,7 @@ export class Pucc {
       if (!command) {
         const errorMsg = `Command "${commandName}" not found. Use help or ${this.commandPrefix}help to see available commands.`;
         console.error(errorMsg);
-        activeLogger?.error('\r\n' + ansi.red(errorMsg));
+        activeLogger?.error(`\r\n${ansi.red(errorMsg)}`);
         return;
       }
 
@@ -125,13 +125,13 @@ export class Pucc {
           result.catch(error => {
             const errorMsg = `Error executing command "${commandName}": ${error}`;
             console.error(errorMsg);
-            activeLogger?.error('\r\n' + ansi.red(errorMsg));
+            activeLogger?.error(`\r\n${ansi.red(errorMsg)}`);
           });
         }
       } catch (error) {
         const errorMsg = `Error executing command "${commandName}": ${error}`;
         console.error(errorMsg);
-        activeLogger?.error('\r\n' + ansi.red(errorMsg));
+        activeLogger?.error(`\r\n${ansi.red(errorMsg)}`);
       }
     } finally {
       if (logger !== undefined) {

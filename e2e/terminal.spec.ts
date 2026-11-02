@@ -45,7 +45,7 @@ test.describe('pucc-terminal', () => {
     await page.keyboard.press('Enter');
     // typed command + output, then the recalled command + output
     await expect
-      .poll(async () => ((await rows(page).innerText()).match(/first/g) ?? []).length)
+      .poll(async () => (((await rows(page).textContent()) ?? '').match(/first/g) ?? []).length)
       .toBe(4);
   });
 });

@@ -24,7 +24,7 @@ export const aboutCommand: CommandHandler = (_args, shell) => {
   console.log(helpText);
 
   if (logger) {
-    logger.writeln('\r\n' + title);
+    logger.writeln(`\r\n${title}`);
     logger.writeln(separatorLine);
     logger.writeln(version);
     logger.writeln(description);

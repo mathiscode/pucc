@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CommandParser } from '../src/core/CommandParser';
+import * as CommandParser from '../src/core/CommandParser';
 
 describe('CommandParser', () => {
   it('returns empty args for blank input', () => {
