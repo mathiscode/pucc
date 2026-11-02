@@ -34,7 +34,9 @@
   "unpkg": "./dist/pucc.js",
   "jsdelivr": "./dist/pucc.js",
   "files": [
-    "dist"
+    "dist",
+    "!dist/index.html",
+    "!dist/demo.css"
   ],
   "scripts": {
     "build": "node config/build.mjs",

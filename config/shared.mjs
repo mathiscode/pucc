@@ -14,6 +14,7 @@ export function bundleConfig({ production }) {
     sourcemap: !production,
     minify: production,
     logLevel: 'info',
+    define: { __PUCC_VERSION__: JSON.stringify(packageJson.version) },
     banner: { js: `/*! ${packageJson.name} v${packageJson.version} */` },
   };
 }
