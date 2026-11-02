@@ -130,7 +130,7 @@ async function build() {
 
 function generateTypes() {
   try {
-    execSync('npx tsc --emitDeclarationOnly --declaration --declarationMap', {
+    execSync('node_modules/.bin/tsc -p tsconfig.build.json', {
       cwd: join(__dirname, '..'),
       stdio: 'inherit',
     });
