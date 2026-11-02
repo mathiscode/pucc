@@ -148,9 +148,7 @@ describe('Pucc', () => {
       expect(error).toHaveBeenCalledWith(expect.stringContaining('async bad'));
     });
 
-    // Known bug: the scoped logger is restored in `finally` before the rejection
-    // arrives, so the scoped logger never sees async errors.
-    it.fails('reports async handler rejections to the scoped logger', async () => {
+    it('reports async handler rejections to the scoped logger', async () => {
       vi.spyOn(console, 'error').mockImplementation(noop);
       const logger = { error: vi.fn() };
       const pucc = new Pucc();

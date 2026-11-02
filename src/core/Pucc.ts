@@ -102,6 +102,8 @@ export class Pucc {
     if (logger !== undefined) {
       this.logger = logger;
     }
+    // Captured now: async rejections arrive after the scoped logger is restored below
+    const activeLogger = this.logger;
 
     try {
       const command = this.commands.get(commandName);
@@ -109,7 +111,7 @@ export class Pucc {
       if (!command) {
         const errorMsg = `Command "${commandName}" not found. Use help or ${this.commandPrefix}help to see available commands.`;
         console.error(errorMsg);
-        this.logger?.error('\r\n' + ansi.red(errorMsg));
+        activeLogger?.error('\r\n' + ansi.red(errorMsg));
         return;
       }
 
@@ -123,13 +125,13 @@ export class Pucc {
           result.catch(error => {
             const errorMsg = `Error executing command "${commandName}": ${error}`;
             console.error(errorMsg);
-            this.logger?.error('\r\n' + ansi.red(errorMsg));
+            activeLogger?.error('\r\n' + ansi.red(errorMsg));
           });
         }
       } catch (error) {
         const errorMsg = `Error executing command "${commandName}": ${error}`;
         console.error(errorMsg);
-        this.logger?.error('\r\n' + ansi.red(errorMsg));
+        activeLogger?.error('\r\n' + ansi.red(errorMsg));
       }
     } finally {
       if (logger !== undefined) {
