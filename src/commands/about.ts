@@ -11,7 +11,7 @@ export const aboutCommand: CommandHandler = (_args, shell) => {
 
   const title = ansi.bold(ansi.blue('Pucc'));
   const separatorLine = ansi.gray(separator);
-  const version = ansi.cyan('Version: 1.0.0');
+  const version = ansi.cyan('Version: 2.0.0');
   const description = 'Power User Console Component - A browser console command system library';
   const helpText = `Use ${ansi.bold(ansi.green(`${prefix}help`))} to see available commands`;
 
