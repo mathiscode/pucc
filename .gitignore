@@ -18,6 +18,7 @@ config/build.cjs
 # IDE
 .vscode/
 .idea/
+.docs/
 *.swp
 *.swo
 *~
