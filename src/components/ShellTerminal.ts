@@ -109,8 +109,8 @@ export class ShellTerminal extends HTMLElement {
   }
 
   private decodeEscapeSequences(str: string): string {
-    return str.replace(/\\([nrtbfv\\'"])/g, (match, escape) => {
-      switch (escape) {
+    return str.replace(/\\([nrtbfv\\'"])/g, (match, char) => {
+      switch (char) {
         case 'n': return '\n'
         case 'r': return '\r'
         case 't': return '\t'
@@ -319,7 +319,7 @@ export class ShellTerminal extends HTMLElement {
       
       if (this.initialContent !== null) {
         const lines = this.initialContent.split('\n')
-        lines.forEach(line => this.terminal?.writeln(line))
+        for (const line of lines) this.terminal?.writeln(line)
       } else {
         this.terminal.writeln(chalk.bold.cyan('Pucc Terminal'))
         this.terminal.writeln(chalk.gray('Press Escape to close; type `help` for available commands'))
