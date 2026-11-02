@@ -6,7 +6,9 @@ import { bundleConfig, copyFile, root } from './shared.mjs';
 const port = Number(process.env.PORT) || 8000;
 
 const context = await esbuild.context({
-  ...bundleConfig({ format: 'iife', autoInit: true, production: false }),
+  ...bundleConfig({ production: false }),
+  entryPoints: [join(root, 'src/iife.ts')],
+  format: 'iife',
   outfile: join(root, 'public/pucc.js'),
   write: false,
 });

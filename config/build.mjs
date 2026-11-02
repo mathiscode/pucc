@@ -8,8 +8,23 @@ const isWatch = process.argv.includes('--watch');
 const production = !isWatch;
 
 const builds = [
-  { ...bundleConfig({ format: 'iife', autoInit: true, production }), outfile: 'dist/pucc.js' },
-  { ...bundleConfig({ format: 'esm', autoInit: false, production }), outfile: 'dist/pucc.esm.js' },
+  // Script-tag bundle: self-contained, auto-initializes window.Pucc
+  {
+    ...bundleConfig({ production }),
+    entryPoints: [join(root, 'src/iife.ts')],
+    format: 'iife',
+    outfile: join(root, 'dist/pucc.js'),
+  },
+  // Library entry points: xterm stays a peer dependency of the consumer
+  {
+    ...bundleConfig({ production }),
+    entryPoints: [join(root, 'src/index.ts'), join(root, 'src/terminal.ts')],
+    format: 'esm',
+    splitting: true,
+    external: ['@xterm/*'],
+    outdir: join(root, 'dist'),
+    chunkNames: 'chunks/[name]-[hash]',
+  },
 ];
 
 function copyStatic() {

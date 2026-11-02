@@ -12,9 +12,27 @@
     "type": "git",
     "url": "https://github.com/mathiscode/pucc.git"
   },
-  "main": "dist/pucc.js",
-  "module": "dist/pucc.esm.js",
-  "types": "dist/index.d.ts",
+  "type": "module",
+  "sideEffects": [
+    "./dist/pucc.js",
+    "./dist/terminal.js",
+    "./src/terminal.ts",
+    "./dist/chunks/*"
+  ],
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./terminal": {
+      "types": "./dist/terminal.d.ts",
+      "import": "./dist/terminal.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "unpkg": "./dist/pucc.js",
+  "jsdelivr": "./dist/pucc.js",
   "files": [
     "dist"
   ],
@@ -29,7 +47,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "check": "biome check"
+    "check": "biome check",
+    "prepublishOnly": "pnpm run check && pnpm run type-check && pnpm test && pnpm build"
   },
   "keywords": [
     "devtools",
@@ -40,10 +59,9 @@
   "devDependencies": {
     "@biomejs/biome": "2.6.4",
     "@playwright/test": "^1.64.1",
-    "@types/node": "^25.3.0",
+    "@types/node": "^22.20.5",
     "@xterm/addon-fit": "^0.11.0",
     "@xterm/xterm": "^6.0.0",
-    "chalk": "^5.6.2",
     "esbuild": "^0.28.2",
     "jsdom": "^30.1.3",
     "typescript": "^7.0.2",
@@ -51,5 +69,21 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@12.14.0",
+  "peerDependencies": {
+    "@xterm/addon-fit": "^0.11.0",
+    "@xterm/xterm": "^6.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@xterm/addon-fit": {
+      "optional": true
+    },
+    "@xterm/xterm": {
+      "optional": true
+    }
   }
 }

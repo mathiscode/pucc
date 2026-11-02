@@ -1,4 +1,4 @@
-import chalk from 'chalk';
+import * as ansi from '../ansi';
 import { aboutCommand } from '../commands/about';
 import { echoCommand } from '../commands/echo';
 import { helpCommand } from '../commands/help';
@@ -109,7 +109,7 @@ export class Pucc {
       if (!command) {
         const errorMsg = `Command "${commandName}" not found. Use help or ${this.commandPrefix}help to see available commands.`;
         console.error(errorMsg);
-        this.logger?.error('\r\n' + chalk.red(errorMsg));
+        this.logger?.error('\r\n' + ansi.red(errorMsg));
         return;
       }
 
@@ -123,13 +123,13 @@ export class Pucc {
           result.catch(error => {
             const errorMsg = `Error executing command "${commandName}": ${error}`;
             console.error(errorMsg);
-            this.logger?.error('\r\n' + chalk.red(errorMsg));
+            this.logger?.error('\r\n' + ansi.red(errorMsg));
           });
         }
       } catch (error) {
         const errorMsg = `Error executing command "${commandName}": ${error}`;
         console.error(errorMsg);
-        this.logger?.error('\r\n' + chalk.red(errorMsg));
+        this.logger?.error('\r\n' + ansi.red(errorMsg));
       }
     } finally {
       if (logger !== undefined) {

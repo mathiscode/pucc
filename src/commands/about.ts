@@ -1,4 +1,4 @@
-import chalk from 'chalk';
+import * as ansi from '../ansi';
 import type { CommandHandler } from '../types';
 
 /**
@@ -9,11 +9,11 @@ export const aboutCommand: CommandHandler = (_args, shell) => {
   const separator = '─'.repeat(50);
   const prefix = shell?.getCommandPrefix() ?? '$';
 
-  const title = chalk.bold.blue('Pucc');
-  const separatorLine = chalk.gray(separator);
-  const version = chalk.cyan('Version: 1.0.0');
+  const title = ansi.bold(ansi.blue('Pucc'));
+  const separatorLine = ansi.gray(separator);
+  const version = ansi.cyan('Version: 1.0.0');
   const description = 'Power User Console Component - A browser console command system library';
-  const helpText = `Use ${chalk.green.bold(`${prefix}help`)} to see available commands`;
+  const helpText = `Use ${ansi.bold(ansi.green(`${prefix}help`))} to see available commands`;
 
   console.log(title);
   console.log(separatorLine);

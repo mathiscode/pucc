@@ -20,7 +20,7 @@ This can be very useful for web apps that need to provide a console for users to
 
 ## Features
 
-- 🚀 Zero dependencies (runtime)
+- 🚀 Zero runtime dependencies (the terminal element uses xterm.js as a peer dependency)
 - 📦 Built with esbuild for fast builds
 - 🔧 TypeScript for type safety
 - 🎯 Flexible command parsing (positional args + key=value pairs)
@@ -38,6 +38,19 @@ yarn add @mathiscode/pucc
 # or
 npm install @mathiscode/pucc
 ```
+
+The core entry (`@mathiscode/pucc`) has no dependencies. To use the `<pucc-terminal>` element, also install the peer dependencies and import the `terminal` entry:
+
+```bash
+pnpm add @xterm/xterm @xterm/addon-fit
+```
+
+```javascript
+import { Pucc } from '@mathiscode/pucc';
+import '@mathiscode/pucc/terminal'; // registers <pucc-terminal>
+```
+
+Requires Node 22 or newer for tooling; the package is ESM-only.
 
 ### Via Script Tag
 
@@ -107,7 +120,7 @@ $new customer name="John Smith" balance=5400
 When using ESM, no global instance is created automatically. You have full control over how Pucc instances are created and used:
 
 ```javascript
-import { Pucc } from 'pucc';
+import { Pucc } from '@mathiscode/pucc';
 
 // Create a Pucc instance
 // Commands are automatically registered on window (for console access)
@@ -128,7 +141,7 @@ shell.addCommand('greet', (args) => {
 By default, `enableGlobalRegistrations: true` registers commands on the `window` object, making them accessible from the browser console. This does NOT affect terminal access - terminals can use any Pucc instance regardless of this setting.
 
 ```javascript
-import { Pucc } from 'pucc';
+import { Pucc } from '@mathiscode/pucc';
 
 // Option 1: Commands available in console AND terminals (default)
 const shell = new Pucc();
@@ -152,7 +165,7 @@ shell.addCommand('test', () => console.log('test'), 'Test command');
 By default, commands use the `$` prefix (e.g., `$help`, `$about`). You can customize this prefix when creating a Pucc instance:
 
 ```javascript
-import { Pucc } from 'pucc';
+import { Pucc } from '@mathiscode/pucc';
 
 // Use a custom prefix (must be a valid JavaScript identifier)
 const shell = new Pucc({ commandPrefix: 'cmd' });
@@ -191,7 +204,7 @@ shell.addCommand('greet', (args) => {
 
 The `<pucc-terminal>` custom element can use either:
 
-1. A shared global instance (`window.Pucc`) - created automatically in IIFE builds
+1. A shared global instance (`window.Pucc`) - created automatically by the script-tag build
 2. Its own isolated instance - configured via `puccOptions`
 
 **Configuring a Terminal with Its Own Instance:**
@@ -223,7 +236,7 @@ The `<pucc-terminal>` custom element can use either:
 **Via property (for full functionality, including functions):**
 
 ```javascript
-import { Pucc } from 'pucc';
+import { Pucc } from '@mathiscode/pucc';
 
 const terminal = document.querySelector('pucc-terminal');
 
@@ -447,7 +460,10 @@ pnpm type-check
 ```text
 pucc/
 ├── src/
-│   ├── index.ts              # Main entry point
+│   ├── index.ts              # Core entry (@mathiscode/pucc)
+│   ├── terminal.ts           # Terminal entry (@mathiscode/pucc/terminal)
+│   ├── iife.ts               # Script-tag bundle entry
+│   ├── ansi.ts               # ANSI color helpers
 │   ├── core/
 │   │   ├── Pucc.ts           # Core class
 │   │   └── CommandParser.ts  # Command parser
@@ -461,13 +477,23 @@ pucc/
 │   ├── types.ts              # Type definitions
 │   └── demo.css              # Demo styles
 ├── config/
-│   └── build.js              # Build configuration
+│   ├── build.mjs             # Build script
+│   └── dev.mjs               # Development server
 ├── public/                   # Demo and development files
 ├── dist/                     # Build output
-├── eslint.config.mts         # ESLint configuration
-├── tsconfig.json             # TypeScript configuration
-└── (dev server: config/dev.mjs)
+├── biome.json                # Biome (lint + format) configuration
+└── tsconfig.json             # TypeScript configuration
 ```
+
+## Migrating from 1.x
+
+2.0 is ESM-only and splits the package into two entry points:
+
+- `@mathiscode/pucc` exports `Pucc` and the types only. `ShellTerminal` and `TerminalLogger` moved to `@mathiscode/pucc/terminal`, which also registers `<pucc-terminal>` when imported. Importing the core entry no longer registers the element.
+- `@xterm/xterm` and `@xterm/addon-fit` are peer dependencies instead of being bundled. Install them if you use the terminal.
+- CommonJS (`require`) and the `dist/pucc.esm.js` file are gone. Use `import`, or the script-tag build `dist/pucc.js`, which still bundles everything and sets `window.Pucc`.
+- `dist/pucc.css` is no longer emitted; the terminal styles itself.
+- Node 22 or newer.
 
 ## License
 

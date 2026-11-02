@@ -1,4 +1,4 @@
-import chalk from 'chalk';
+import * as ansi from '../ansi';
 import type { Command, CommandHandler } from '../types';
 
 /**
@@ -23,8 +23,8 @@ export const helpCommand: CommandHandler = (_args, shell) => {
   const separator = '─'.repeat(50);
   const prefix = shell.getCommandPrefix();
 
-  const title = chalk.bold.cyan('\r\n\r\nAvailable Commands:');
-  const separatorLine = chalk.gray(separator);
+  const title = ansi.bold(ansi.cyan('\r\n\r\nAvailable Commands:'));
+  const separatorLine = ansi.gray(separator);
 
   console.log(title);
   console.log(separatorLine);
@@ -32,15 +32,15 @@ export const helpCommand: CommandHandler = (_args, shell) => {
   logger?.writeln(separatorLine);
 
   commands.forEach((cmd: Command) => {
-    const consoleText = `${chalk.green.bold(`${prefix}${cmd.name}(...args)`)} - ${chalk.gray(cmd.description)}`;
-    const terminalText = `${chalk.green.bold(cmd.name)} - ${chalk.gray(cmd.description)}`;
+    const consoleText = `${ansi.bold(ansi.green(`${prefix}${cmd.name}(...args)`))} - ${ansi.gray(cmd.description)}`;
+    const terminalText = `${ansi.bold(ansi.green(cmd.name))} - ${ansi.gray(cmd.description)}`;
 
     console.log(consoleText);
     logger?.writeln(terminalText);
   });
 
-  const footer = chalk.gray(separator);
-  const total = chalk.dim(`Total: ${commands.length} command(s)`);
+  const footer = ansi.gray(separator);
+  const total = ansi.dim(`Total: ${commands.length} command(s)`);
 
   console.log(footer);
   console.log(total);

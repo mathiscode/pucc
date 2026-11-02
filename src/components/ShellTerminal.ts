@@ -1,7 +1,6 @@
 import { FitAddon } from '@xterm/addon-fit';
 import { Terminal } from '@xterm/xterm';
-import '@xterm/xterm/css/xterm.css';
-import chalk from 'chalk';
+import * as ansi from '../ansi';
 import type { Pucc } from '../core/Pucc';
 import { Pucc as PuccClass } from '../core/Pucc';
 import type { Command, CommandHandler } from '../types';
@@ -349,13 +348,13 @@ export class ShellTerminal extends HTMLElement {
         const lines = this.initialContent.split('\n');
         for (const line of lines) this.terminal?.writeln(line);
       } else {
-        this.terminal.writeln(chalk.bold.cyan('Pucc Terminal'));
+        this.terminal.writeln(ansi.bold(ansi.cyan('Pucc Terminal')));
         this.terminal.writeln(
-          chalk.gray('Press Escape to close; type `help` for available commands')
+          ansi.gray('Press Escape to close; type `help` for available commands')
         );
 
         if (!this.shell) {
-          this.terminal.writeln(chalk.yellow('\r\nWarning: Pucc not found on window'));
+          this.terminal.writeln(ansi.yellow('\r\nWarning: Pucc not found on window'));
         }
       }
 
@@ -565,7 +564,7 @@ export class ShellTerminal extends HTMLElement {
     if (!input) return;
 
     if (!this.shell) {
-      this.writeln(chalk.red('Error: Pucc not available'));
+      this.writeln(ansi.red('Error: Pucc not available'));
       return;
     }
 
@@ -600,7 +599,7 @@ export class ShellTerminal extends HTMLElement {
         this.shell.execute(commandName, args, this.logger);
       }
     } catch (error) {
-      this.writeln(chalk.red(`Error: ${error instanceof Error ? error.message : String(error)}`));
+      this.writeln(ansi.red(`Error: ${error instanceof Error ? error.message : String(error)}`));
     }
   }
 
@@ -693,7 +692,7 @@ export class ShellTerminal extends HTMLElement {
 
   private writePrompt() {
     if (this.terminal) {
-      this.terminal.write(chalk.green(this.promptText));
+      this.terminal.write(ansi.green(this.promptText));
     }
   }
 

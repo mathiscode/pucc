@@ -1,5 +1,5 @@
 import type { Terminal } from '@xterm/xterm';
-import chalk from 'chalk';
+import * as ansi from '../ansi';
 
 export class TerminalLogger {
   private terminal: Terminal;
@@ -21,14 +21,14 @@ export class TerminalLogger {
   }
 
   error(message: string): void {
-    this.writeln(chalk.red(message));
+    this.writeln(ansi.red(message));
   }
 
   warn(message: string): void {
-    this.writeln(chalk.yellow(message));
+    this.writeln(ansi.yellow(message));
   }
 
   success(message: string): void {
-    this.writeln(chalk.green(message));
+    this.writeln(ansi.green(message));
   }
 }
