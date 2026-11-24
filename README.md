@@ -246,6 +246,19 @@ term.addEventListener('pucc-command', () => {
 
 **Quoting:** arguments may use `"double"` or `'single'` quotes or backslash escapes (`cat "my docs/a.txt"`, `cat my\ docs/a.txt`). For tab completion, `tokenize(input)` returns each word with its offsets and open-quote state, and `quoteArg(value, token.quote)` escapes a completion for insertion (both exported from `@mathiscode/pucc`).
 
+**Long-running commands:** a handler may be `async` and write as it goes. Use the `ctx` argument rather than `shell.logger`, which is only correct until the first `await`. The prompt returns when the promise settles, and Ctrl+C aborts `ctx.signal` and returns the prompt immediately:
+
+```javascript
+shell.addCommand('watch', async (args, shell, ctx) => {
+  for (let i = 1; !ctx.signal.aborted && i <= 10; i++) {
+    ctx.logger?.writeln(`tick ${i}`);
+    await new Promise(r => setTimeout(r, 1000));
+  }
+}, 'Print a tick every second');
+```
+
+While a command runs, other keystrokes are ignored. The element dispatches bubbling `pucc-command-start` and `pucc-command-end` events (`detail: { input, cancelled? }`) around async commands, which you can use for a busy indicator.
+
 **Via property (for full functionality, including functions):**
 
 ```javascript

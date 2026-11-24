@@ -35,6 +35,7 @@ export class ShellTerminal extends HTMLElement {
   #container: HTMLElement | null = null;
   #isVisible = false;
   #editor = new LineEditor();
+  #running: { controller: AbortController; input: string } | null = null;
   #shell: Pucc | null = null;
   #hotkeyConfig: HotkeyConfig = { key: 's', altKey: true };
   #hotkeyAbort: AbortController | null = null;
@@ -250,38 +251,70 @@ export class ShellTerminal extends HTMLElement {
     const terminal = this.#terminal;
     if (!terminal) return;
 
+    if (this.#running) {
+      // Only Ctrl+C is accepted while a command runs
+      if (data === '\x03') this.#cancelRunning();
+      return;
+    }
+
     const result = this.#editor.handle(data);
     if (result.output) terminal.write(result.output);
 
     if (result.submit !== undefined) {
-      this.#executeCommand(result.submit);
+      const pending = this.#executeCommand(result.submit);
       terminal.write('\r\n');
-      this.#writePrompt();
+      if (!pending) this.#writePrompt();
     } else if (result.cancelled) {
       this.#writePrompt();
     }
   }
 
-  #executeCommand(input: string) {
-    if (!input) return;
+  /** Returns true when the command is still running asynchronously */
+  #executeCommand(input: string): boolean {
+    if (!input) return false;
 
     if (!this.#shell) {
       this.writeln(ansi.red('Error: Pucc not available'));
-      return;
+      return false;
     }
 
-    this.dispatchEvent(
-      new CustomEvent('pucc-command', {
-        detail: { input },
-        bubbles: true,
-      })
-    );
+    this.#emit('pucc-command', { input });
 
+    const controller = new AbortController();
+    let pending: Promise<void> | undefined;
     try {
-      this.#shell.executeFromInput(input, this.#logger);
+      pending = this.#shell.executeFromInput(input, this.#logger, controller.signal);
     } catch (error) {
       this.writeln(ansi.red(`Error: ${error instanceof Error ? error.message : String(error)}`));
     }
+    if (!pending) return false;
+
+    const run = { controller, input };
+    this.#running = run;
+    this.#emit('pucc-command-start', { input });
+    pending.then(() => {
+      // Ignore runs already cancelled: the prompt is back and the handler finished late
+      if (this.#running !== run) return;
+      this.#running = null;
+      this.#emit('pucc-command-end', { input, cancelled: false });
+      this.#terminal?.write('\r\n');
+      this.#writePrompt();
+    });
+    return true;
+  }
+
+  #cancelRunning() {
+    const run = this.#running;
+    if (!run) return;
+    this.#running = null;
+    run.controller.abort();
+    this.#emit('pucc-command-end', { input: run.input, cancelled: true });
+    this.#terminal?.write('^C\r\n');
+    this.#writePrompt();
+  }
+
+  #emit(type: string, detail: Record<string, unknown>) {
+    this.dispatchEvent(new CustomEvent(type, { detail, bubbles: true }));
   }
 
   #setupHotkeyListener() {

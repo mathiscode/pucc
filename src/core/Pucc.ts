@@ -95,9 +95,17 @@ export class Pucc {
   }
 
   /**
-   * Execute a command by name with arguments
+   * Execute a command by name with arguments.
+   * Returns a promise that settles when an async handler finishes (errors are reported to the
+   * logger, never rejected), or undefined when the command completed synchronously.
+   * Aborting `signal` tells the handler the user cancelled.
    */
-  execute(commandName: string, input: string = '', logger?: TerminalLogger | null): void {
+  execute(
+    commandName: string,
+    input: string = '',
+    logger?: TerminalLogger | null,
+    signal?: AbortSignal
+  ): Promise<void> | undefined {
     const previousLogger = this.logger;
     if (logger !== undefined) {
       this.logger = logger;
@@ -118,11 +126,15 @@ export class Pucc {
       try {
         const args = CommandParser.parse(input);
         // Pass the shell instance to the handler so it can access shell methods
-        const result = command.handler(args, this);
+        const result = command.handler(args, this, {
+          logger: activeLogger,
+          signal: signal ?? new AbortController().signal,
+        });
 
         // Handle async handlers
         if (result instanceof Promise) {
-          result.catch(error => {
+          return result.catch(error => {
+            if (signal?.aborted) return;
             const errorMsg = `Error executing command "${commandName}": ${error}`;
             console.error(errorMsg);
             activeLogger?.error(`\r\n${ansi.red(errorMsg)}`);
@@ -143,7 +155,11 @@ export class Pucc {
   /**
    * Execute a command from raw input string (handles command prefix automatically)
    */
-  executeFromInput(input: string, logger?: TerminalLogger | null): void {
+  executeFromInput(
+    input: string,
+    logger?: TerminalLogger | null,
+    signal?: AbortSignal
+  ): Promise<void> | undefined {
     const trimmed = input.trim();
     if (!trimmed) return;
 
@@ -159,7 +175,7 @@ export class Pucc {
     // Strip command prefix if present
     if (commandName.startsWith(this.commandPrefix))
       commandName = commandName.slice(this.commandPrefix.length);
-    this.execute(commandName, args, logger);
+    return this.execute(commandName, args, logger, signal);
   }
 
   /**

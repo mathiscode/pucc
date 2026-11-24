@@ -80,7 +80,7 @@ describe('Pucc', () => {
       pucc.addCommand('winping', handler, 'Ping');
       const w = window as unknown as Record<string, (...a: string[]) => void>;
       w.$winping('a', 'b=1');
-      expect(handler).toHaveBeenCalledWith({ _: ['a'], b: 1 }, pucc);
+      expect(handler).toHaveBeenCalledWith({ _: ['a'], b: 1 }, pucc, expect.any(Object));
       expect(typeof w.winping).toBe('function');
     });
 
@@ -106,7 +106,7 @@ describe('Pucc', () => {
       const handler = vi.fn();
       pucc.addCommand('run', handler, '');
       pucc.execute('run', 'x name="A B"');
-      expect(handler).toHaveBeenCalledWith({ _: ['x'], name: 'A B' }, pucc);
+      expect(handler).toHaveBeenCalledWith({ _: ['x'], name: 'A B' }, pucc, expect.any(Object));
     });
 
     it('reports unknown commands to the logger', () => {
@@ -179,7 +179,7 @@ describe('Pucc', () => {
       const handler = vi.fn();
       pucc.addCommand('go', handler, '');
       pucc.executeFromInput('$go there now');
-      expect(handler).toHaveBeenCalledWith({ _: ['there', 'now'] }, pucc);
+      expect(handler).toHaveBeenCalledWith({ _: ['there', 'now'] }, pucc, expect.any(Object));
     });
 
     it('works without a prefix and ignores blank input', () => {
@@ -189,6 +189,52 @@ describe('Pucc', () => {
       pucc.executeFromInput('go');
       pucc.executeFromInput('   ');
       expect(handler).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('async execution', () => {
+    it('returns undefined for sync handlers and a promise for async ones', async () => {
+      const shell = new Pucc({ enableGlobalRegistrations: false });
+      shell.addCommand('s', () => {}, 'sync');
+      shell.addCommand('a', async () => {}, 'async');
+      expect(shell.execute('s')).toBeUndefined();
+      const pending = shell.execute('a');
+      expect(pending).toBeInstanceOf(Promise);
+      await pending;
+    });
+
+    it('passes the logger and signal to the handler', async () => {
+      const shell = new Pucc({ enableGlobalRegistrations: false });
+      const logger = { error: vi.fn() } as never;
+      const seen: unknown[] = [];
+      shell.addCommand(
+        'a',
+        async (_args, _shell, ctx) => {
+          await Promise.resolve();
+          seen.push(ctx?.logger, ctx?.signal.aborted);
+        },
+        'async'
+      );
+      await shell.execute('a', '', logger);
+      expect(seen).toEqual([logger, false]);
+    });
+
+    it('aborts the signal and suppresses errors after cancellation', async () => {
+      const shell = new Pucc({ enableGlobalRegistrations: false });
+      const logger = { error: vi.fn() } as never;
+      const controller = new AbortController();
+      shell.addCommand(
+        'a',
+        async (_args, _shell, ctx) => {
+          await Promise.resolve();
+          if (ctx?.signal.aborted) throw new Error('aborted');
+        },
+        'async'
+      );
+      const pending = shell.execute('a', '', logger, controller.signal);
+      controller.abort();
+      await pending;
+      expect((logger as { error: ReturnType<typeof vi.fn> }).error).not.toHaveBeenCalled();
     });
   });
 });
