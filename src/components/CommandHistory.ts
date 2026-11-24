@@ -15,9 +15,31 @@ export class CommandHistory {
     return this.#entries;
   }
 
+  get limit(): number {
+    return this.#limit;
+  }
+
+  set limit(limit: number) {
+    this.#limit = Math.max(1, Math.floor(limit) || 1);
+    this.#trim();
+  }
+
+  /** Replace all entries (oldest first), keeping only the newest `limit` and ending navigation */
+  load(entries: readonly string[]): void {
+    this.#entries = entries.filter(entry => typeof entry === 'string' && entry !== '');
+    this.#trim();
+    this.reset();
+  }
+
   add(entry: string): void {
     this.#entries.push(entry);
-    if (this.#entries.length > this.#limit) this.#entries.shift();
+    this.#trim();
+  }
+
+  #trim(): void {
+    if (this.#entries.length > this.#limit) {
+      this.#entries = this.#entries.slice(this.#entries.length - this.#limit);
+    }
   }
 
   /** Stop navigating; the next `previous` starts from the newest entry */

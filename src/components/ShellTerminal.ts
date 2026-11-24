@@ -46,7 +46,16 @@ export class ShellTerminal extends HTMLElement {
   #puccOptions: PuccOptions | null = null;
 
   static get observedAttributes() {
-    return ['hotkey', 'height', 'theme', 'prompt', 'embedded', 'initial-content', 'pucc-options'];
+    return [
+      'hotkey',
+      'height',
+      'theme',
+      'prompt',
+      'embedded',
+      'initial-content',
+      'pucc-options',
+      'history-limit',
+    ];
   }
 
   constructor() {
@@ -60,6 +69,7 @@ export class ShellTerminal extends HTMLElement {
     if (puccOptionsAttr !== null) {
       this.#parsePuccOptions(puccOptionsAttr);
     }
+    this.#applyHistoryLimit(this.getAttribute('history-limit'));
     this.#render();
     this.#initializeTerminal();
     if (!this.#isEmbedded) {
@@ -112,11 +122,19 @@ export class ShellTerminal extends HTMLElement {
       case 'initial-content':
         this.#initialContent = newValue ? decodeEscapeSequences(newValue) : null;
         break;
+      case 'history-limit':
+        this.#applyHistoryLimit(newValue);
+        break;
       case 'pucc-options':
         this.#parsePuccOptions(newValue);
         this.#initializeShell();
         break;
     }
+  }
+
+  #applyHistoryLimit(value: string | null) {
+    const limit = Number.parseInt(value ?? '', 10);
+    if (limit > 0) this.#editor.history.limit = limit;
   }
 
   #readEmbedded(): boolean {
@@ -417,6 +435,18 @@ export class ShellTerminal extends HTMLElement {
   set puccOptions(options: PuccOptions | null) {
     this.#puccOptions = options;
     this.#initializeShell();
+  }
+
+  /**
+   * Command history, oldest first. Assign to restore a saved history (for example from
+   * localStorage); save it by listening for `pucc-command` or reading this after each command.
+   */
+  get history(): string[] {
+    return [...this.#editor.history.entries];
+  }
+
+  set history(entries: string[]) {
+    this.#editor.history.load(entries);
   }
 
   getLogger(): TerminalLogger | null {

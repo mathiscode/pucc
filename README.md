@@ -231,7 +231,20 @@ The `<pucc-terminal>` custom element can use either:
 - `prompt` - Custom prompt text (default: `"$ "`)
 - `hotkey` - Keyboard shortcut for dropdown terminals (e.g., `"alt+s"`, `"ctrl+shift+t"`)
 - `initial-content` - Custom initial content to display instead of the default welcome message (supports newlines with `\n`)
+- `history-limit` - Maximum remembered commands (default: `100`)
 - `pucc-options` - JSON string with Pucc constructor options (see below)
+
+**Command history:** the `history` property returns the entries (oldest first) and accepts an array to restore them. Persist it yourself, e.g. with the bubbling `pucc-command` event:
+
+```javascript
+const term = document.querySelector('pucc-terminal');
+term.history = JSON.parse(localStorage.getItem('history') ?? '[]');
+term.addEventListener('pucc-command', () => {
+  localStorage.setItem('history', JSON.stringify(term.history));
+});
+```
+
+**Quoting:** arguments may use `"double"` or `'single'` quotes or backslash escapes (`cat "my docs/a.txt"`, `cat my\ docs/a.txt`). For tab completion, `tokenize(input)` returns each word with its offsets and open-quote state, and `quoteArg(value, token.quote)` escapes a completion for insertion (both exported from `@mathiscode/pucc`).
 
 **Via property (for full functionality, including functions):**
 
